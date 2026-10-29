@@ -19,9 +19,9 @@ OBSTACLE_MODEL_CLI = QUAD_BASELINE_CLI_8 + (
     '--num_workers=68 --num_envs_per_worker=2 --quads_num_agents=8 '
     # Neighbor & General Encoder for obst & neighbor
     '--quads_neighbor_visible_num=6 --quads_neighbor_obs_type=pos_vel --quads_encoder_type=attention '
-    # WandB
-    '--with_wandb=True --wandb_project=Quad-Swarm-RL --wandb_user=multi-drones '
-    '--wandb_group=pbt_obstacle_multi_attn_v2'
+    # SwanLab
+    '--with_swanlab=True --swanlab_project=quad-swarm-rl '
+    '--swanlab_group=pbt_obstacle_multi_attn_v2'
 )
 
 _experiment = Experiment(
