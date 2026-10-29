@@ -4,6 +4,7 @@ Main script for training a swarm of quadrotors with SampleFactory
 """
 
 import sys
+from argparse import Namespace
 
 from sample_factory.algo.utils.misc import ExperimentStatus
 from sample_factory.cfg.arguments import maybe_load_from_checkpoint, parse_full_cfg, parse_sf_args
@@ -35,8 +36,9 @@ def run_swarm_training(cfg):
     # Resolve saved settings before choosing the logger, including when resuming a W&B run.
     cli_args = cfg.cli_args.copy()
     if cfg.restart_behavior == 'resume':
-        cfg = maybe_load_from_checkpoint(cfg)
-        cfg.cli_args = cli_args
+        # make_runner loads again using vars(cfg), which is empty for AttrDict.
+        cfg = Namespace(**maybe_load_from_checkpoint(cfg))
+    cfg.cli_args = cli_args
     if cfg.with_swanlab:
         if cfg.with_wandb:
             log.info('SwanLab enabled: disabling W&B synchronization')
@@ -44,6 +46,7 @@ def run_swarm_training(cfg):
         cfg.cli_args['with_wandb'] = False
 
     cfg, runner = make_runner(cfg)
+    cfg.cli_args = cli_args
     observer = SwanLabObserver() if cfg.with_swanlab else None
     if observer is not None:
         runner.register_observer(observer)
